@@ -1,0 +1,40 @@
+package at.htl.mirrorhome.config
+
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
+import springfox.documentation.builders.PathSelectors
+import springfox.documentation.builders.RequestHandlerSelectors
+import springfox.documentation.spi.DocumentationType
+import springfox.documentation.spring.web.plugins.Docket
+import springfox.documentation.swagger2.annotations.EnableSwagger2
+import springfox.documentation.service.ApiInfo
+import springfox.documentation.service.Contact
+import springfox.documentation.spring.data.rest.configuration.SpringDataRestConfiguration
+import java.util.*
+
+@Configuration
+@EnableSwagger2
+// @Import(SpringDataRestConfiguration::class) failes because of https://github.com/springfox/springfox/issues/2581
+class SwaggerConfig {
+    @Bean
+    fun api(): Docket {
+        return Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                // .paths(PathSelectors.any())
+                .paths(PathSelectors.regex("/.*"))
+                .build()
+                .apiInfo(apiInfo());
+    }
+
+    fun apiInfo(): ApiInfo {
+        return ApiInfo(
+                "MirrorMasterService REST API",
+                "Created by Dahoam Foundation",
+                "1.0.0 beta",
+                "Terms of service",
+                Contact("Felix Reichel", "http://felixreichel.com", "inquiries@felixreichel.com"),
+                "License of API", "API license URL", Collections.emptyList())
+    }
+}
